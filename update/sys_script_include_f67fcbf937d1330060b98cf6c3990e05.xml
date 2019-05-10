@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_58872_needit.NeedItUtils</api_name>
+        <client_callable>false</client_callable>
+        <description>Utils Script for the NeedIt application. </description>
+        <name>NeedItUtils</name>
+        <script><![CDATA[var NeedItUtils = Class.create();
+NeedItUtils.prototype = {
+    initialize: function() {
+		
+		
+    },
+	
+	//Moving verification logic you wrote in the NeedIt when needed field date Business rule into a Script rule. getContentType()
+	//Call the Script Include method from the Business Rule
+	isDatePast: function(strDate){
+		// Create GlideDateTime objects for the current date and the passed in date
+		var currentDateGDT = new GlideDateTime();
+		var testDateGDT = new GlideDateTime(strDate);
+		
+		// If the testdate is before rightnow, return true, else return false
+		if (testDateGDT.before(currentDateGDT)) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	},
+	
+	
+	isDateToday: function(strDate){
+		// Create GlideDateTime objects for the current date and the passed in date
+		var currentDateGDT = new GlideDateTime();
+		var testDateGDT = new GlideDateTime(strDate);
+		
+		//Get Date portion of the currentTimeGDT and WhenNeededGTD
+		var currentDate = currentDateGDT.getLocalDate();
+		var testDate = testDateGDT.getLocalDate();
+		
+	 	//Check if current Date is equal to selected Date in When needed field
+		if (currentDate.compareTo(testDate) == 0) {
+			return true;
+		}
+		else {
+			return false;
+		}	
+	},
+
+    type: 'NeedItUtils'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-05-09 19:46:15</sys_created_on>
+        <sys_id>f67fcbf937d1330060b98cf6c3990e05</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>NeedItUtils</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_include_f67fcbf937d1330060b98cf6c3990e05</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-05-10 13:31:23</sys_updated_on>
+    </sys_script_include>
+</record_update>
