@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sysauto_script">
+    <sysauto_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <condition/>
+        <conditional>false</conditional>
+        <name>Find  Due Soon NeedIt Task</name>
+        <run_as display_value="System Administrator">6816f79cc0a8016401c5a33be04be441</run_as>
+        <run_as_tz/>
+        <run_dayofmonth>1</run_dayofmonth>
+        <run_dayofweek>1</run_dayofweek>
+        <run_period/>
+        <run_start>2019-05-15 14:24:42</run_start>
+        <run_time>1970-01-01 16:00:05</run_time>
+        <run_type>daily</run_type>
+        <script><![CDATA[	// Get today's time and date
+	var currentDateTime = new GlideDateTime();
+
+	
+
+
+	//1.query the database for NeedIt Task records with Due dates field values between now and 24 hours.
+	//2.Only return NeedIt Task records that do not have a State field value of Closed Complete.
+	//1.
+	//Retrieve Table
+	var dueSoonNITasks = new GlideRecord('x_58872_needit_needit_task');
+	//Add query for due dates equal or not passed.
+	dueSoonNITasks.addQuery('due_date','>=',currentDateTime);
+	//Can do this instead of comparing Dates like in the while loop below
+		//dueSoonNITasks.addQuery('due_date','<',gs.hoursAgo(-24));
+	//2.
+	dueSoonNITasks.addQuery('state','!=',3);
+	//Run Query
+	dueSoonNITasks.query();
+
+	while(dueSoonNITasks.next()){
+		var nextDay = new GlideDateTime();
+		nextDay.addDaysLocalTime(1);
+		gs.info("NEXT DAY: " + nextDay);
+		var foundTaskState = dueSoonNITasks.getValue('state');
+		
+		//Make DateTime from found Task Due Date
+		var foundTaskDateTime =  new GlideDateTime(dueSoonNITasks.getValue('due_date'));
+		//Add 24 hours to the found Due date for a record
+		//var foundTaskDatePlus24hours = new GlideDateTime(currentDateTime.addDaysLocalTime(1)); //new GlideDateTime(dueSoonNITasks.getValue('due_date'));
+		//Compare found due date to current Time and 24 hours from due date. 
+		gs.info("Not Overdue Task Due Date: " + foundTaskDateTime + "Today PLUS 24 HRS: " + nextDay);
+		
+		if (foundTaskDateTime <= nextDay){
+			
+			gs.info("DUE SOON NITR Number:" + 
+					dueSoonNITasks.number + " | Due Date: " + 
+					dueSoonNITasks.getValue('due_date') + " |  Due Date: " + 
+					foundTaskState);
+			//Generate an event for each overdue NeedIt Task record found.
+			gs.eventQueue('x_58872_needit.dueSoonNeedItTask',dueSoonNITasks,dueSoonNITasks.number,gs.getUserName());
+		}
+		
+
+	}
+	
+
+	
+
+
+
+
+
+
+
+
+]]></script>
+        <sys_class_name>sysauto_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2019-05-15 14:46:14</sys_created_on>
+        <sys_id>1a7041733751330060b98cf6c3990e1b</sys_id>
+        <sys_mod_count>27</sys_mod_count>
+        <sys_name>Find  Due Soon NeedIt Task</sys_name>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sysauto_script_1a7041733751330060b98cf6c3990e1b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2019-05-15 17:20:22</sys_updated_on>
+        <upgrade_safe>false</upgrade_safe>
+    </sysauto_script>
+</record_update>
